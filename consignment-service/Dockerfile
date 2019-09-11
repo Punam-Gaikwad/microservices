@@ -1,7 +1,15 @@
+FROM golang:1.9.0 as builder
+
+WORKDIR /Go_Lang/Workspace/src/github.com/Punam-Gaikwad/microservices/consignment-service
+
+COPY . .
+
 FROM alpine:latest
+
+RUN apk --no-cache add ca-certificates
+RUN apk add --no-cache bash
 
 RUN mkdir /app
 WORKDIR /app
-ADD /src/github.com/Punam-Gaikwad/microservices/consigment-service /app/consigment-service
-
-CMD ["./consigment-service"]
+COPY --from=builder /Go_Lang/Workspace/src/github.com/Punam-Gaikwad/microservices/consignment-service .
+CMD ["./consignment-service"]
