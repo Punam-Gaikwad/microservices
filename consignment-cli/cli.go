@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -36,6 +37,8 @@ func main() {
 	defer conn.Close()
 	client := pb.NewShippingServiceClient(conn)
 
+	fmt.Println("consignement service on address: ", address, "\n")
+
 	// Contact the server and print out its response.
 	file := defaultFilename
 	if len(os.Args) > 1 {
@@ -43,6 +46,7 @@ func main() {
 	}
 
 	consignment, err := parseFile(file)
+	fmt.Println("consignment form JSON file is: \n ", consignment, "\n")
 
 	if err != nil {
 		log.Fatalf("Could not parse file: %v", err)
@@ -59,6 +63,6 @@ func main() {
 		log.Fatalf("Could not list consignments: %v", err)
 	}
 	for _, v := range getAll.Consignments {
-		log.Println(v)
+		fmt.Println(v, "\n")
 	}
 }
