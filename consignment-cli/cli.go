@@ -46,7 +46,6 @@ func main() {
 	}
 
 	consignment, err := parseFile(file)
-	fmt.Println("consignment form JSON file is: \n ", consignment, "\n")
 
 	if err != nil {
 		log.Fatalf("Could not parse file: %v", err)
@@ -56,8 +55,9 @@ func main() {
 	if err != nil {
 		log.Fatalf("Could not greet: %v", err)
 	}
-	log.Printf("Created: %t", r.Created)
+	log.Printf("Created: %t \n\n", r.Created)
 
+	log.Println("Consignments List -> \n")
 	getAll, err := client.GetConsignments(context.Background(), &pb.GetRequest{})
 	if err != nil {
 		log.Fatalf("Could not list consignments: %v", err)
