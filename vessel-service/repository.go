@@ -5,6 +5,7 @@ import (
 	"errors"
 
 	pb "github.com/Punam-Gaikwad/microservices/vessel-service/proto/vessel"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -21,7 +22,7 @@ type VesselRepository struct {
 
 //FindAvailable -
 func (vesselRepository *VesselRepository) FindAvailable(spec *pb.Specification) (*pb.Vessel, error) {
-	cur, _ := vesselRepository.collection.Find(context.Background(), nil, nil)
+	cur, _ := vesselRepository.collection.Find(context.Background(), bson.D{{}}, nil)
 
 	var vessels []*pb.Vessel
 	for cur.Next(context.Background()) {

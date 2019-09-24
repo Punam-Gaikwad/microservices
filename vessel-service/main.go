@@ -16,6 +16,16 @@ const (
 	defaultHost = "mongodb://localhost:27017"
 )
 
+func createDummyVesselData(repo Repository) {
+	vessels := []*pb.Vessel{
+		{Id: "vessel001", Name: "Kane's Salty Secret", MaxWeight: 200000, Capacity: 500},
+	}
+
+	for _, v := range vessels {
+		repo.Create(v)
+	}
+}
+
 func main() {
 
 	lis, err := net.Listen("tcp", port)
@@ -38,6 +48,7 @@ func main() {
 	vesselCollection := client.Database("shippy").Collection("vessels")
 
 	repository := &VesselRepository{vesselCollection}
+	createDummyVesselData(repository)
 
 	pb.RegisterVesselServiceServer(s, &handler{repository})
 

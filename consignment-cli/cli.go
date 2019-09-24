@@ -1,13 +1,12 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
-
-	"context"
 
 	pb "github.com/Punam-Gaikwad/microservices/consignment-service/proto/consignment"
 	"google.golang.org/grpc"
@@ -29,7 +28,7 @@ func parseFile(file string) (*pb.Consignment, error) {
 }
 
 func main() {
-	// Set up a connection to the server.
+	// Set up a connection to the consignment server.
 	conn, err := grpc.Dial(address, grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("Did not connect: %v", err)
@@ -37,9 +36,9 @@ func main() {
 	defer conn.Close()
 	client := pb.NewShippingServiceClient(conn)
 
-	fmt.Println("consignement service on address: ", address, "\n")
+	fmt.Println("consignement service on address: ", address)
 
-	// Contact the server and print out its response.
+	// Contact the consignement server and print out its response.
 	file := defaultFilename
 	if len(os.Args) > 1 {
 		file = os.Args[1]
@@ -55,14 +54,15 @@ func main() {
 	if err != nil {
 		log.Fatalf("Could not greet: %v", err)
 	}
-	log.Printf("Created: %t \n\n", r.Created)
+	log.Printf("Consignment Created: %t \n\n", r.Created)
 
-	log.Println("Consignments List -> \n")
+	log.Println("Consignments List -> ")
 	getAll, err := client.GetConsignments(context.Background(), &pb.GetRequest{})
 	if err != nil {
 		log.Fatalf("Could not list consignments: %v", err)
 	}
 	for _, v := range getAll.Consignments {
-		fmt.Println(v, "\n")
+		//fmt.Println(v, "\n")
+		fmt.Printf("%v\n\n", v)
 	}
 }

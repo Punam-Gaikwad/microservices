@@ -18,6 +18,17 @@ type Handler struct {
 // which is a create method, which takes a context and a request as an
 // argument, these are handled by the gRPC server.
 func (s *Handler) CreateConsignment(ctx context.Context, req *pb.Consignment) (*pb.Response, error) {
+	// Here we call a client instance of our vessel service with our consignment weight,
+	// and the amount of containers as the capacity value
+	vesselResp, err := s.vesselClient.FindAvailable(context.Background(), &vesselProto.Specification{
+		MaxWeight: req.Weight,
+		Capacity:  int32(len(req.Containers)),
+	})
+	fmt.Printf("Found vessel: %s \n", vesselResp.Vessel.Name)
+	if err != nil {
+		return nil, err
+	}
+	req.VesselId = vesselResp.Vessel.Id
 
 	// Save our consignment
 	er := s.repo.Create(req)
